@@ -1,8 +1,8 @@
 // Proyecto: Sistema de medición de distancia con alarma visual y sonora
-// Componentes: Sensor ultrasónico HC-SR04, LED RGB, buzzer, botón pulsador
-// Funcionalidad: Medir distancia y activar alarmas según proximidad
+// componentes: Sensor ultrasónico HC-SR04, LED RGB, buzzer, botón pulsador
+// funcionalidad: Medir distancia y activar alarmas según proximidad
 
-// --- Definición de pines ---
+// Definición de pines 
 const int trigPin = 9;       // Pin TRIG del sensor ultrasónico
 const int echoPin = 10;      // Pin ECHO del sensor ultrasónico
 const int buzzerPin = 6;     // Pin del buzzer
@@ -13,15 +13,14 @@ const int redPin = 3;
 const int greenPin = 4;
 const int bluePin = 5;
 
-// --- Variables de control ---
+// variables de control 
 bool alarmaActiva = true;    // Estado inicial de la alarma (activada)
 bool lastButtonState = LOW;  // Estado anterior del botón
 bool currentButtonState;     // Estado actual del botón
 
 long duration;               // Tiempo de eco del sensor
 int distance;                // Distancia calculada en cm
-
-// --- Configuración inicial ---
+ 
 void setup() {
   pinMode(trigPin, OUTPUT);
   pinMode(echoPin, INPUT);
@@ -35,7 +34,7 @@ void setup() {
   Serial.begin(9600); // Comunicación con el Monitor Serial
 }
 
-// --- Función para medir distancia ---
+// función para medir distancia 
 int medirDistancia() {
   digitalWrite(trigPin, LOW);
   delayMicroseconds(2);
@@ -49,14 +48,14 @@ int medirDistancia() {
   return distance;
 }
 
-// --- Función para controlar el LED RGB ---
+// Función para controlar el RGB 
 void setColor(int redValue, int greenValue, int blueValue) {
   analogWrite(redPin, redValue);
   analogWrite(greenPin, greenValue);
   analogWrite(bluePin, blueValue);
 }
 
-// --- Loop principal ---
+//  Loop principal 
 void loop() {
   // Leer distancia
   int distanciaActual = medirDistancia();
@@ -79,7 +78,7 @@ void loop() {
     Serial.println("Desactivada");
   }
 
-  // --- Control de alarmas ---
+  // Control de alarmas 
   if (!alarmaActiva) {
     // Alarma desactivada: LED azul, buzzer apagado
     setColor(0, 0, 255);
