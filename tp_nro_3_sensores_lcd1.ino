@@ -3,27 +3,26 @@
 //LiquidCrystal (rs, e, d4, d5, d6, d7)
 LiquidCrystal lcd(12, 11, 10, 2, 1, 13);
 
-// Variables de pines
+// pines para LED RGB y buzzer
 int ledR = 3;
 int ledG = 4;
 int ledB = 5;
 int buzzer = 6;
 
-int temp = A0;    // LM35
-int ldr = A1;     // Fotoresistor o sensor de luz o ldr
-int pir = 7;      // Sensor movimiento
+// sensores conectados
+int temp = A0;    // LM35 mide temperatura
+int ldr = A1;     // sensor de luz
+int pir = 7;      // sensor de movimiento
+int trig = 8;     // ultrasonico trigger
+int echo = 9;     // ultrasonico echo
 
-int trig = 8;     // Ultrasonico
-int echo = 9;
-
-// Variables de lectura
+// variables de lectura
 int tempValor = 0;
 int tempC = 0;
 int luzValor = 0;
 int movimiento = 0;
 int distancia = 0;
 int tiempoEcho = 0;
-
 
 void setup()
 {
@@ -36,7 +35,7 @@ void setup()
   
   pinMode(trig, OUTPUT);
   pinMode(echo, INPUT);
-  lcd.begin(16, 2);
+  lcd.begin(16, 2); // inicializa pantalla LCD
   Serial.begin(9600);
   Serial.println("Sistema de alarma iniciado");
   delay(1000);
@@ -44,27 +43,26 @@ void setup()
 
 void loop()
 {
-  // Leer temperatura LM35
+  // lectura de temperatura LM35
   tempValor = analogRead(temp);
-  tempC = tempValor * 0.488; // Conversion a °C
+  tempC = tempValor * 0.488; // convierte a grados Celsius
   
-  // Leer luz LDR
+  // lectura de luz ambiente
   luzValor = analogRead(ldr);
   
-  // Leer movimiento PIR
+  // lectura de movimiento PIR
   movimiento = digitalRead(pir);
   
-  // Leer distancia ultrasonico
+  // lectura de distancia ultrasonico
   digitalWrite(trig, LOW);
   delay(2);
   digitalWrite(trig, HIGH);
   delay(5);
   digitalWrite(trig, LOW);
   tiempoEcho = pulseIn(echo, HIGH);
-  distancia = tiempoEcho / 58;
+  distancia = tiempoEcho / 58; // calcula en cm
   
-  
-  //Mostrar en LCD
+  // muestra en LCD
   lcd.clear();
   lcd.setCursor(0, 0);
   lcd.print("T: ");
@@ -78,7 +76,7 @@ void loop()
   lcd.print("cm M: ");
   lcd.print(movimiento);
   
-  // Mostrar en monitor serial
+  // muestra en monitor serie
   Serial.print("Temp: ");
   Serial.print(tempC);
   Serial.print("C  Luz: ");
@@ -88,25 +86,25 @@ void loop()
   Serial.print("cm  Mov: ");
   Serial.println(movimiento);
   
-  // Condicion de noche: luz menor a 20% = valor < 200
+  // condición de noche: luz baja
   if(luzValor < 200)
   {
-    // Alerta temperatura > 39°C
+    // alerta si temperatura alta
     if(tempC > 39)
     {
-      digitalWrite(ledR, HIGH);
+      digitalWrite(ledR, HIGH); // rojo encendido
       digitalWrite(ledG, LOW);
       digitalWrite(ledB, LOW);
-      digitalWrite(buzzer, HIGH);
+      digitalWrite(buzzer, HIGH); // buzzer breve
       delay(200);
       digitalWrite(buzzer, LOW);
       Serial.println("ALERTA: Toque detectado");
     }
-    // Alerta movimiento
+    // alerta si hay movimiento
     else if(movimiento == 1)
     {
       digitalWrite(ledR, LOW);
-      digitalWrite(ledG, HIGH);
+      digitalWrite(ledG, HIGH); // verde encendido
       digitalWrite(ledB, LOW);
       digitalWrite(buzzer, HIGH);
       delay(100);
@@ -115,16 +113,17 @@ void loop()
     }
     else
     {
+      // todo apagado si no hay alerta
       digitalWrite(ledR, LOW);
       digitalWrite(ledG, LOW);
       digitalWrite(ledB, LOW);
       digitalWrite(buzzer, LOW);
     }
   }
-  // Condicion de dia
+  // condición de día
   else
   {
-    // Alerta distancia < 100cm
+    // alerta si distancia menor a 100 cm
     if(distancia < 100 && distancia > 0)
     {
       digitalWrite(ledR, HIGH);
@@ -139,7 +138,7 @@ void loop()
       digitalWrite(buzzer, LOW);
       Serial.println("ALERTA: Muy cerca de la obra");
     }
-    // Alerta movimiento dia
+    // alerta si hay movimiento
     else if(movimiento == 1)
     {
       digitalWrite(ledR, LOW);
@@ -152,6 +151,7 @@ void loop()
     }
     else
     {
+      // todo apagado si no hay alerta
       digitalWrite(ledR, LOW);
       digitalWrite(ledG, LOW);
       digitalWrite(ledB, LOW);
@@ -159,5 +159,5 @@ void loop()
     }
   }
   
-  delay(500);
+  delay(500); // pausa entre lecturas
 }
