@@ -161,3 +161,84 @@ void loop()
   
   delay(500); // pausa entre lecturas
 }
+
+
+/*
+int trig = 2;
+int echo= 3;
+int buzzer = 4;
+int ledR = 5;
+int ledG = 6;
+int ledB = 7;
+int boton = 8;
+
+bool alarmaActiva = false; // 1 = activada, 0 = desactivada
+bool estadoBotonInicial = false;
+
+void setup() {
+  pinMode(trig, OUTPUT);
+  pinMode(echo, INPUT);
+  pinMode(buzzer, OUTPUT);
+  pinMode(ledR, OUTPUT);
+  pinMode(ledG, OUTPUT);
+  pinMode(ledB, OUTPUT);
+  pinMode(boton, INPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  // Botón: alterna estado de alarma
+  int estadoBoton = digitalRead(boton);
+  if (estadoBoton == HIGH && estadoBotonInicial== LOW) {
+    alarmaActiva = !alarmaActiva;
+    delay(300); // evita rebotes
+  }
+  estadoBotonInicial= estadoBoton;
+
+  // Medición de distancia
+  digitalWrite(trig, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trig, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trig, LOW);
+  int duracion = pulseIn(echo, HIGH);
+  int distancia = duracion * 0.034 / 2;
+
+  Serial.print("Distancia actual del objeto: ");
+  Serial.print(distancia);
+  Serial.print(" cm | Alarma: ");
+  if (alarmaActiva == true) Serial.println("Activada");
+  else Serial.println("Desactivada");
+
+  // Lógica de alarma
+  if (alarmaActiva == false) {
+    digitalWrite(ledR, LOW);
+    digitalWrite(ledG, LOW);
+    digitalWrite(ledB, HIGH); // azul
+    digitalWrite(buzzer, LOW);
+  } else {
+    if (distancia > 150) { // Estado 1
+      digitalWrite(ledR, LOW);
+      digitalWrite(ledG, HIGH);
+      digitalWrite(ledB, LOW);
+      digitalWrite(buzzer, LOW);
+    } else if (distancia >= 50 && distancia <= 150) { // Estado 2
+      digitalWrite(ledR, HIGH);
+      digitalWrite(ledG, HIGH);
+      digitalWrite(ledB, LOW);
+      digitalWrite(buzzer, HIGH);
+      delay(500);
+      digitalWrite(buzzer, LOW);
+      delay(500);
+    } else if (distancia < 50) { // Estado 3
+      digitalWrite(ledR, HIGH);
+      digitalWrite(ledG, LOW);
+      digitalWrite(ledB, LOW);
+      digitalWrite(buzzer, HIGH);
+      delay(50);
+      digitalWrite(buzzer, LOW);
+      delay(50);
+    }
+  }
+}
+*/
